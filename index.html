@@ -1,789 +1,1079 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מצפן הגורל — המדריך האישי שלך</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Heebo:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<title>מצפן הגורל — ניתוח אישיות וייעוד</title>
+<meta name="description" content="גלה את ייעודך האמיתי עם ניתוח נומרולוגיה, אסטרולוגיה וקואצ'ינג מבוסס בינה מלאכותית">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #F0D080;
-    --deep: #0A0A14;
-    --deep2: #10101E;
-    --deep3: #181828;
-    --text: #E8E0D0;
-    --text-dim: #9990AA;
-    --accent: #7B5EA7;
-    --accent2: #4A90D9;
-    --star: rgba(255,255,255,0.7);
-  }
+:root {
+  --gold: #C9A84C;
+  --gold-light: #F0D080;
+  --gold-dark: #8B6914;
+  --deep: #070710;
+  --deep2: #0D0D1A;
+  --deep3: #141422;
+  --text: #EDE8DC;
+  --text-dim: #8880A0;
+  --accent: #6B4FA0;
+  --accent2: #3A7DC8;
+  --rose: #C04878;
+  --teal: #2A9080;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: var(--deep);
-    color: var(--text);
-    font-family: 'Heebo', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+html { scroll-behavior: smooth; }
 
-  /* Stars background */
-  .stars {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle var(--dur) infinite ease-in-out;
-  }
-  @keyframes twinkle {
-    0%,100% { opacity: 0.1; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(1.3); }
-  }
+body {
+  background: var(--deep);
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  /* Nebula */
-  .nebula {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .nebula-1 {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(123,94,167,0.15) 0%, transparent 70%);
-    top: -200px; right: -200px;
-    animation: drift 20s infinite ease-in-out alternate;
-  }
-  .nebula-2 {
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(74,144,217,0.12) 0%, transparent 70%);
-    bottom: -100px; left: -100px;
-    animation: drift 25s infinite ease-in-out alternate-reverse;
-  }
-  @keyframes drift {
-    0% { transform: translate(0,0); }
-    100% { transform: translate(30px, 30px); }
-  }
+/* ═══ CANVAS BG ═══ */
+#cosmos { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
 
-  /* Main container */
-  #app {
-    position: relative;
-    z-index: 1;
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-    min-height: 100vh;
-  }
+/* ═══ APP ═══ */
+#app {
+  position: relative;
+  z-index: 1;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 30px 18px 100px;
+  min-height: 100vh;
+}
 
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 50px;
-    animation: fadeInDown 1s ease;
-  }
-  .logo {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(22px, 5vw, 36px);
-    background: linear-gradient(135deg, var(--gold-light), var(--gold), #8B6914);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-  .tagline {
-    color: var(--text-dim);
-    font-size: 14px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-  .divider {
-    width: 120px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 20px auto;
-  }
+/* ═══ HEADER ═══ */
+.header {
+  text-align: center;
+  margin-bottom: 44px;
+  animation: fadeDown 1.2s ease;
+}
+.logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(20px, 5vw, 34px);
+  background: linear-gradient(135deg, #F0D080 0%, #C9A84C 40%, #8B6914 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+.tagline {
+  color: var(--text-dim);
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.header-line {
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto;
+}
 
-  /* Card */
-  .card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 20px;
-    padding: 36px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-    animation: fadeInUp 0.6s ease;
-  }
+/* ═══ CARD ═══ */
+.card {
+  background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 24px;
+  padding: 38px 32px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  animation: fadeUp 0.5s ease;
+}
 
-  /* Progress bar */
-  .progress-wrap {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 36px;
-  }
-  .progress-bar {
-    flex: 1;
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-    border-radius: 10px;
-    transition: width 0.6s ease;
-  }
-  .progress-text {
-    font-size: 12px;
-    color: var(--text-dim);
-    white-space: nowrap;
-  }
+/* ═══ PROGRESS ═══ */
+.prog-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 34px;
+}
+.prog-bar {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 10px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.prog-num {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
 
-  /* Step icon */
-  .step-icon {
-    font-size: 48px;
-    text-align: center;
-    margin-bottom: 20px;
-    animation: pulse 3s infinite ease-in-out;
-  }
-  @keyframes pulse {
-    0%,100% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.05); filter: brightness(1.2); }
-  }
+/* ═══ STEP ═══ */
+.step-icon {
+  font-size: 52px;
+  text-align: center;
+  margin-bottom: 18px;
+  animation: breathe 4s infinite ease-in-out;
+}
+.step-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(17px, 3.5vw, 24px);
+  text-align: center;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.step-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 28px;
+  font-style: italic;
+  line-height: 1.6;
+}
 
-  /* Question */
-  .question-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(18px, 3.5vw, 26px);
-    color: var(--text);
-    text-align: center;
-    margin-bottom: 10px;
-    line-height: 1.5;
-  }
-  .question-subtitle {
-    font-size: 13px;
-    color: var(--text-dim);
-    text-align: center;
-    margin-bottom: 30px;
-    font-style: italic;
-  }
+/* ═══ INPUTS ═══ */
+.field { margin-bottom: 18px; }
+.field-label {
+  display: block;
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+input[type=text], input[type=date], input[type=time], textarea, select {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s;
+  direction: rtl;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.06);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+textarea { resize: none; min-height: 90px; line-height: 1.6; }
+select option { background: var(--deep2); }
 
-  /* Input */
-  .input-group {
-    margin-bottom: 20px;
-  }
-  .input-label {
-    display: block;
-    font-size: 13px;
-    color: var(--gold);
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-  input, select, textarea {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: 10px;
-    padding: 14px 16px;
-    color: var(--text);
-    font-family: 'Heebo', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: all 0.3s;
-    direction: rtl;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.07);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-  }
-  textarea { resize: none; min-height: 100px; }
-  select option { background: var(--deep2); }
+/* ═══ CHOICE GRID ═══ */
+.choices-grid {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.choices-grid.cols2 { grid-template-columns: 1fr 1fr; }
+.choices-grid.cols1 { grid-template-columns: 1fr; }
 
-  /* Choice buttons */
-  .choices {
-    display: grid;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .choices.two-col { grid-template-columns: 1fr 1fr; }
-  .choice-btn {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 14px 18px;
-    color: var(--text);
-    font-family: 'Heebo', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-align: right;
-    direction: rtl;
-    line-height: 1.4;
-  }
-  .choice-btn:hover {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.08);
-    transform: translateX(-3px);
-  }
-  .choice-btn.selected {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.15);
-    box-shadow: 0 0 15px rgba(201,168,76,0.2);
-  }
-  .choice-btn .emoji { margin-left: 8px; font-size: 20px; }
+.choice {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 13px 16px;
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: right;
+  direction: rtl;
+  line-height: 1.5;
+  position: relative;
+  overflow: hidden;
+}
+.choice::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.choice:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-1px); }
+.choice:hover::before { opacity: 1; }
+.choice.selected {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.12);
+  box-shadow: 0 0 20px rgba(201,168,76,0.15);
+}
+.choice.selected::before { opacity: 1; }
+.choice .c-emoji { font-size: 18px; margin-left: 10px; }
+.choice .c-check {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(201,168,76,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  transition: all 0.2s;
+}
+.choice.selected .c-check {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #000;
+}
+.multi-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+}
 
-  /* Button */
-  .btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, #8B6914, var(--gold), #C9A84C);
-    border: none;
-    border-radius: 12px;
-    color: #0A0A14;
-    font-family: 'Heebo', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-  }
-  .btn:hover::after { left: 100%; }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.35); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+/* ═══ SCALE ═══ */
+.scale-wrap { margin-bottom: 22px; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); margin-bottom: 10px; }
+.scale-btns { display: flex; gap: 8px; }
+.scale-btn {
+  flex: 1;
+  height: 42px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scale-btn:hover, .scale-btn.selected {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.12);
+  color: var(--gold);
+}
 
-  /* Loading */
-  .loading {
-    text-align: center;
-    padding: 40px;
-  }
-  .orbit {
-    width: 80px; height: 80px;
-    margin: 0 auto 24px;
-    position: relative;
-  }
-  .orbit-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid transparent;
-  }
-  .orbit-ring-1 {
-    width: 80px; height: 80px;
-    top: 0; left: 0;
-    border-top-color: var(--gold);
-    animation: spin 1.5s linear infinite;
-  }
-  .orbit-ring-2 {
-    width: 55px; height: 55px;
-    top: 12px; left: 12px;
-    border-right-color: var(--accent);
-    animation: spin 1s linear infinite reverse;
-  }
-  .orbit-core {
-    position: absolute;
-    width: 20px; height: 20px;
-    background: radial-gradient(circle, var(--gold-light), var(--gold));
-    border-radius: 50%;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 15px var(--gold);
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text {
-    color: var(--text-dim);
-    font-size: 14px;
-    letter-spacing: 2px;
-  }
-  .loading-quote {
-    color: var(--gold);
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 16px;
-    margin-top: 16px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.5s forwards;
-  }
+/* ═══ BTN ═══ */
+.btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), #D4B060);
+  border: none;
+  border-radius: 14px;
+  color: #0A0A14;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transition: left 0.6s;
+}
+.btn:hover::after { left: 100%; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.3); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-  /* Result */
-  .result-header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .result-name {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(16px, 3vw, 22px);
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-  .section {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(201,168,76,0.12);
-    border-radius: 14px;
-    padding: 22px;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: 12px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-content {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--text);
-  }
-  .section-content p { margin-bottom: 10px; }
-  .section-content p:last-child { margin-bottom: 0; }
-  .highlight {
-    color: var(--gold-light);
-    font-weight: 500;
-  }
+/* ═══ LOADING ═══ */
+.loading { text-align: center; padding: 50px 20px; }
+.mandala {
+  width: 100px; height: 100px;
+  margin: 0 auto 28px;
+  position: relative;
+}
+.m-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.m-ring-1 { width: 100px; height: 100px; border-top-color: var(--gold); animation: spin 2s linear infinite; }
+.m-ring-2 { width: 72px; height: 72px; border-right-color: var(--accent); animation: spin 1.5s linear infinite reverse; }
+.m-ring-3 { width: 48px; height: 48px; border-bottom-color: var(--teal); animation: spin 1s linear infinite; }
+.m-core {
+  position: absolute;
+  width: 20px; height: 20px;
+  background: radial-gradient(circle, var(--gold-light), var(--gold));
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px var(--gold);
+  animation: pulse2 2s infinite ease-in-out;
+}
+.load-title { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold); margin-bottom: 12px; }
+.load-sub { color: var(--text-dim); font-size: 13px; letter-spacing: 2px; margin-bottom: 20px; }
+.load-quote {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-dim);
+  max-width: 320px;
+  margin: 0 auto;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeIn 1s ease 0.8s forwards;
+}
+.load-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+.load-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+.load-step .dot {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
 
-  /* Action steps */
-  .steps-list {
-    list-style: none;
-    counter-reset: step;
-  }
-  .steps-list li {
-    counter-increment: step;
-    display: flex;
-    gap: 14px;
-    margin-bottom: 14px;
-    align-items: flex-start;
-  }
-  .steps-list li::before {
-    content: counter(step);
-    min-width: 28px; height: 28px;
-    background: linear-gradient(135deg, var(--accent), var(--gold));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: white;
-    flex-shrink: 0;
-  }
+/* ═══ RESULT ═══ */
+.result-hero {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(107,79,160,0.08));
+  border-radius: 20px;
+  border: 1px solid rgba(201,168,76,0.15);
+}
+.result-star { font-size: 60px; margin-bottom: 14px; animation: breathe 4s infinite; }
+.result-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(14px, 3vw, 20px);
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.result-tagline { font-size: 13px; color: var(--text-dim); font-style: italic; }
 
-  /* Chat */
-  .chat-wrap {
-    margin-top: 30px;
-  }
-  .chat-messages {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--gold) transparent;
-  }
-  .msg {
-    max-width: 82%;
-    padding: 12px 16px;
-    border-radius: 14px;
-    font-size: 14px;
-    line-height: 1.6;
-    animation: fadeInUp 0.3s ease;
-  }
-  .msg-ai {
-    background: rgba(123,94,167,0.2);
-    border: 1px solid rgba(123,94,167,0.3);
-    align-self: flex-start;
-    border-radius: 14px 14px 14px 4px;
-  }
-  .msg-user {
-    background: rgba(201,168,76,0.15);
-    border: 1px solid rgba(201,168,76,0.25);
-    align-self: flex-end;
-    border-radius: 14px 14px 4px 14px;
-    text-align: right;
-  }
-  .chat-input-row {
-    display: flex;
-    gap: 10px;
-  }
-  .chat-input-row input {
-    flex: 1;
-    margin: 0;
-  }
-  .send-btn {
-    width: 48px; height: 48px;
-    background: linear-gradient(135deg, var(--accent), var(--gold));
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 20px;
-    transition: all 0.3s;
-    flex-shrink: 0;
-  }
-  .send-btn:hover { transform: scale(1.08); }
+.section {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 14px;
+  transition: all 0.3s;
+}
+.section:hover { border-color: rgba(201,168,76,0.2); background: rgba(255,255,255,0.035); }
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+.sec-icon { font-size: 20px; }
+.sec-title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 600;
+  flex: 1;
+}
+.sec-toggle { color: var(--text-dim); font-size: 12px; transition: transform 0.3s; }
+.sec-toggle.open { transform: rotate(180deg); }
+.sec-body { font-size: 14px; line-height: 1.9; color: var(--text); }
+.sec-body p { margin-bottom: 10px; }
+.sec-body p:last-child { margin-bottom: 0; }
+.sec-body strong { color: var(--gold-light); font-weight: 600; }
 
-  /* Animations */
-  @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+.num-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--gold-dark));
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin: 0 4px;
+}
 
-  /* Responsive */
-  @media (max-width: 500px) {
-    .card { padding: 24px 18px; }
-    .choices.two-col { grid-template-columns: 1fr; }
-  }
+/* Steps list */
+.steps-ol { list-style: none; counter-reset: s; }
+.steps-ol li {
+  counter-increment: s;
+  display: flex;
+  gap: 14px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.steps-ol li::before {
+  content: counter(s);
+  min-width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--accent), var(--gold-dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Daily affirmation */
+.affirmation {
+  background: linear-gradient(135deg, rgba(107,79,160,0.15), rgba(201,168,76,0.1));
+  border: 1px solid rgba(107,79,160,0.25);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.aff-label { font-size: 10px; letter-spacing: 4px; color: var(--accent2); text-transform: uppercase; margin-bottom: 12px; }
+.aff-text { font-family: 'Playfair Display', serif; font-size: 16px; line-height: 1.7; color: var(--text); font-style: italic; }
+
+/* Chat */
+.chat-section {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 16px;
+  padding: 22px;
+  margin-top: 14px;
+}
+.chat-header { font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.chat-msgs {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,168,76,0.3) transparent;
+}
+.msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  animation: fadeUp 0.3s ease;
+}
+.msg-ai {
+  background: rgba(107,79,160,0.18);
+  border: 1px solid rgba(107,79,160,0.25);
+  align-self: flex-start;
+  border-radius: 16px 16px 16px 4px;
+}
+.msg-user {
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.2);
+  align-self: flex-end;
+  border-radius: 16px 16px 4px 16px;
+}
+.chat-row { display: flex; gap: 10px; }
+.chat-row input { flex: 1; margin: 0; }
+.send-btn {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--accent), var(--gold-dark));
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.send-btn:hover { transform: scale(1.08); box-shadow: 0 4px 15px rgba(107,79,160,0.4); }
+
+/* Quick questions */
+.quick-qs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.quick-q {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.quick-q:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Animations */
+@keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes spin { to { transform:translate(-50%,-50%) rotate(360deg); } }
+@keyframes breathe { 0%,100% { transform:scale(1); } 50% { transform:scale(1.06); } }
+@keyframes pulse2 { 0%,100% { box-shadow:0 0 20px var(--gold); } 50% { box-shadow:0 0 35px var(--gold-light); } }
+
+@media (max-width: 480px) {
+  .card { padding: 24px 16px; }
+  .choices-grid.cols2 { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
-
-<div class="stars" id="stars"></div>
-<div class="nebula nebula-1"></div>
-<div class="nebula nebula-2"></div>
+<canvas id="cosmos"></canvas>
 
 <div id="app">
   <div class="header">
     <div class="logo">✦ מצפן הגורל ✦</div>
-    <div class="tagline">גלה את ייעודך האמיתי</div>
-    <div class="divider"></div>
+    <div class="tagline">ניתוח אישיות וייעוד • נומרולוגיה • אסטרולוגיה • קואצ'ינג</div>
+    <div class="header-line"></div>
   </div>
-  <div id="main-card" class="card"></div>
+  <div id="card" class="card"></div>
 </div>
 
 <script>
-// ---- Stars ----
-const starsEl = document.getElementById('stars');
-for (let i = 0; i < 120; i++) {
-  const s = document.createElement('div');
-  s.className = 'star';
-  const size = Math.random() * 2.5 + 0.5;
-  s.style.cssText = `
-    width:${size}px; height:${size}px;
-    top:${Math.random()*100}%; left:${Math.random()*100}%;
-    --dur:${2+Math.random()*4}s;
-    animation-delay:${Math.random()*5}s;
-  `;
-  starsEl.appendChild(s);
+// ══════════════════════════════════
+// COSMOS BACKGROUND
+// ══════════════════════════════════
+const canvas = document.getElementById('cosmos');
+const ctx = canvas.getContext('2d');
+let stars = [], comets = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+for (let i = 0; i < 200; i++) {
+  stars.push({
+    x: Math.random(), y: Math.random(),
+    r: Math.random() * 1.5 + 0.3,
+    a: Math.random(),
+    speed: 0.003 + Math.random() * 0.005,
+    phase: Math.random() * Math.PI * 2
+  });
 }
 
-// ---- State ----
+function drawCosmos(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Nebulae
+  const grd1 = ctx.createRadialGradient(canvas.width*0.8, canvas.height*0.2, 0, canvas.width*0.8, canvas.height*0.2, canvas.width*0.4);
+  grd1.addColorStop(0, 'rgba(107,79,160,0.08)');
+  grd1.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd1;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  const grd2 = ctx.createRadialGradient(canvas.width*0.2, canvas.height*0.7, 0, canvas.width*0.2, canvas.height*0.7, canvas.width*0.35);
+  grd2.addColorStop(0, 'rgba(42,144,128,0.06)');
+  grd2.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd2;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Stars
+  stars.forEach(s => {
+    const a = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${a})`;
+    ctx.fill();
+  });
+}
+
+let raf;
+function animCosmos(t) {
+  drawCosmos(t/1000);
+  raf = requestAnimationFrame(animCosmos);
+}
+requestAnimationFrame(animCosmos);
+
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
 const state = {
   step: 0,
   answers: {},
   profile: null,
-  chatHistory: []
+  chatHistory: [],
+  sessionInsights: [],
+  userPatterns: {}
 };
 
-// ---- Steps definition ----
+// ══════════════════════════════════
+// GEMINI API
+// ══════════════════════════════════
+const GEMINI_KEY = 'AIzaSyCK-ZmjyFiNtiq7FyJxGLKYhogtJn3R9EU';
+
+async function callGemini(prompt, systemContext = '') {
+  const fullPrompt = systemContext ? `${systemContext}\n\n${prompt}` : prompt;
+  
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: fullPrompt }] }],
+      generationConfig: { temperature: 0.85, maxOutputTokens: 2048 }
+    })
+  });
+  
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+// ══════════════════════════════════
+// STEPS
+// ══════════════════════════════════
 const steps = [
   {
-    id: 'name',
-    icon: '✨',
+    id: 'intro',
+    icon: '🌌',
     title: 'ברוך הבא למסע הגילוי שלך',
-    subtitle: 'אני אהיה המדריך שלך — שילוב של אסטרולוגיה, נומרולוגיה וקואצ\'ינג',
-    fields: [{ type: 'text', key: 'name', label: 'מה שמך המלא?', placeholder: 'שמך המלא...' }]
+    sub: 'מצפן הגורל ישלב נומרולוגיה, אסטרולוגיה וקואצ\'ינג כדי לחשוף את הייעוד האמיתי שלך',
+    fields: [{ type: 'text', key: 'name', label: 'שמך המלא', ph: 'הכנס את שמך המלא...' }]
   },
   {
-    id: 'birthdate',
+    id: 'birth',
     icon: '🌙',
-    title: 'תאריך הלידה שלך — שפת הכוכבים',
-    subtitle: 'הכוכבים שמרו את הסוד שלך מהרגע הראשון',
+    title: 'שפת הכוכבים שלך',
+    sub: 'תאריך ושעת הלידה יגלו את המפה האסטרולוגית שלך',
     fields: [
       { type: 'date', key: 'birthdate', label: 'תאריך לידה' },
-      { type: 'time', key: 'birthtime', label: 'שעת לידה (אם ידוע)', placeholder: 'HH:MM' }
+      { type: 'time', key: 'birthtime', label: 'שעת לידה (אם ידועה)' },
+      { type: 'text', key: 'birthplace', label: 'עיר לידה', ph: 'לדוגמה: תל אביב, ישראל' }
     ]
-  },
-  {
-    id: 'birthplace',
-    icon: '🌍',
-    title: 'מקום הלידה שלך',
-    subtitle: 'המיקום בשמיים בזמן לידתך מגדיר את האנרגיות שלך',
-    fields: [{ type: 'text', key: 'birthplace', label: 'עיר ומדינה', placeholder: 'לדוגמה: תל אביב, ישראל' }]
   },
   {
     id: 'feeling',
     icon: '💫',
-    title: 'מה אתה מרגיש עכשיו בחיים?',
-    subtitle: 'דבר אליי בכנות — אין תשובה נכונה או שגויה',
-    type: 'choices',
+    title: 'איפה אתה עכשיו?',
+    sub: 'בחר את כל מה שמתאר אותך — ניתן לבחור מספר תשובות',
+    type: 'multi',
+    key: 'feelings',
+    cols: 2,
     choices: [
-      { emoji: '🌪️', text: 'אבוד, לא יודע לאן ללכת' },
-      { emoji: '🔥', text: 'יש בי אנרגיה אבל חסר כיוון' },
-      { emoji: '😴', text: 'עייף ומחפש משמעות' },
-      { emoji: '🚀', text: 'מוכן לשינוי גדול' },
-      { emoji: '⚡', text: 'תקוע, רוצה להתפרץ' },
-      { emoji: '🌱', text: 'בתחילת מסע חדש' }
-    ],
-    key: 'feeling'
+      { e: '🌪️', t: 'אבוד, מחפש כיוון' },
+      { e: '🔥', t: 'אנרגטי אבל חסר מיקוד' },
+      { e: '😴', t: 'עייף ומחפש משמעות' },
+      { e: '🚀', t: 'מוכן לשינוי גדול' },
+      { e: '⚡', t: 'תקוע, רוצה להתפרץ' },
+      { e: '🌱', t: 'בתחילת דרך חדשה' },
+      { e: '😤', t: 'מתוסכל מהמצב' },
+      { e: '✨', t: 'אופטימי ומלא תקווה' }
+    ]
+  },
+  {
+    id: 'strengths',
+    icon: '💎',
+    title: 'הכוחות שלך',
+    sub: 'באילו תחומים אתה מרגיש שאתה מצטיין? בחר הכל שנכון',
+    type: 'multi',
+    key: 'strengths',
+    cols: 2,
+    choices: [
+      { e: '🎨', t: 'יצירתיות ואמנות' },
+      { e: '🧠', t: 'חשיבה אנליטית' },
+      { e: '❤️', t: 'אמפתיה ועזרה לאחרים' },
+      { e: '💬', t: 'תקשורת ודיבור' },
+      { e: '🏗️', t: 'בנייה ויצירה' },
+      { e: '📊', t: 'ניהול ואירגון' },
+      { e: '🌿', t: 'חיבור לטבע' },
+      { e: '🔬', t: 'מחקר וחקירה' }
+    ]
+  },
+  {
+    id: 'obstacles',
+    icon: '🌑',
+    title: 'מה מעכב אותך?',
+    sub: 'זיהוי החסמים הוא הצעד הראשון לשחרורם — בחר את כל הרלוונטי',
+    type: 'multi',
+    key: 'obstacles',
+    cols: 2,
+    choices: [
+      { e: '😨', t: 'פחד מכישלון' },
+      { e: '🤷', t: 'לא יודע מאיפה להתחיל' },
+      { e: '💸', t: 'חוסר משאבים כלכליים' },
+      { e: '👥', t: 'דאגה לדעת הסביבה' },
+      { e: '🧠', t: 'ביקורת עצמית קשה' },
+      { e: '⏰', t: 'תחושת חוסר זמן' },
+      { e: '🔒', t: 'אמונות מגבילות' },
+      { e: '😔', t: 'ביטחון עצמי נמוך' }
+    ]
+  },
+  {
+    id: 'values',
+    icon: '⭐',
+    title: 'מה חשוב לך בחיים?',
+    sub: 'הערכים שלך הם המצפן הפנימי — בחר עד 5 ערכים מרכזיים',
+    type: 'multi',
+    key: 'values',
+    max: 5,
+    cols: 2,
+    choices: [
+      { e: '👨‍👩‍👧', t: 'משפחה וקשרים' },
+      { e: '🏆', t: 'הצלחה והישגים' },
+      { e: '🕊️', t: 'שלום פנימי' },
+      { e: '💰', t: 'ביטחון כלכלי' },
+      { e: '🌍', t: 'תרומה לעולם' },
+      { e: '🎯', t: 'חופש ועצמאות' },
+      { e: '📚', t: 'ידע וצמיחה' },
+      { e: '🎭', t: 'הנאה ויצירה' }
+    ]
   },
   {
     id: 'passion',
     icon: '❤️‍🔥',
     title: 'מה גורם לך לשכוח את הזמן?',
-    subtitle: 'כשאתה שקוע בזה — שעות עוברות כמו דקות',
-    fields: [{ type: 'textarea', key: 'passion', label: 'תאר בחופשיות', placeholder: 'כתוב מה שעולה לך...' }]
+    sub: 'כשאתה עושה את זה — שעות עוברות כרגעים',
+    fields: [
+      { type: 'textarea', key: 'passion', label: 'התשוקה שלך', ph: 'כתוב בחופשיות, ללא שיפוט...' },
+      { type: 'text', key: 'dream', label: 'החלום הגדול שלך', ph: 'אם הכל היה אפשרי, מה היית עושה?' }
+    ]
   },
   {
-    id: 'strength',
+    id: 'energy',
     icon: '⚡',
-    title: 'מה אנשים אומרים שאתה טוב בו?',
-    subtitle: 'לפעמים אחרים רואים את כוחותינו לפנינו',
-    fields: [{ type: 'textarea', key: 'strength', label: 'הכישורים שלך', placeholder: 'גם אם זה נשמע פשוט...' }]
-  },
-  {
-    id: 'obstacle',
-    icon: '🌑',
-    title: 'מה עוצר אותך?',
-    subtitle: 'הצל שמחכה לאור',
-    type: 'choices',
-    choices: [
-      { emoji: '😨', text: 'פחד מכישלון' },
-      { emoji: '🤷', text: 'לא יודע מאיפה להתחיל' },
-      { emoji: '💸', text: 'חוסר משאבים' },
-      { emoji: '👥', text: 'דעות של אחרים' },
-      { emoji: '🧠', text: 'ביקורת עצמית' },
-      { emoji: '⏰', text: 'חוסר זמן' }
-    ],
-    key: 'obstacle'
-  },
-  {
-    id: 'dream',
-    icon: '🌟',
-    title: 'אם הכל היה אפשרי — מה היית עושה?',
-    subtitle: 'שחרר את הצנזור הפנימי. תן לחלום לדבר.',
-    fields: [{ type: 'textarea', key: 'dream', label: 'החלום הגדול שלך', placeholder: 'כתוב מבלי לשפוט את עצמך...' }]
+    title: 'מה רמת הדחיפות שלך לשינוי?',
+    sub: 'דרג על סקלה של 1-10',
+    type: 'scale',
+    key: 'urgency',
+    min: 'לא דחוף',
+    max: 'חייב לשנות עכשיו'
   }
 ];
 
-// ---- Render ----
+// ══════════════════════════════════
+// NUMEROLOGY CALCULATOR
+// ══════════════════════════════════
+function calcLifePath(dateStr) {
+  if (!dateStr) return null;
+  const digits = dateStr.replace(/-/g, '').split('').map(Number);
+  let sum = digits.reduce((a,b) => a+b, 0);
+  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
+    sum = sum.toString().split('').map(Number).reduce((a,b) => a+b, 0);
+  }
+  return sum;
+}
+
+function calcSoulNumber(name) {
+  if (!name) return null;
+  const vowels = {'א':1,'ע':5,'י':1,'ו':6,'ה':5};
+  let sum = name.split('').filter(c => vowels[c]).reduce((a,c) => a+vowels[c], 0);
+  while (sum > 9 && sum !== 11 && sum !== 22) {
+    sum = sum.toString().split('').map(Number).reduce((a,b) => a+b, 0);
+  }
+  return sum || Math.ceil(name.length / 3);
+}
+
+function getZodiac(dateStr) {
+  if (!dateStr) return null;
+  const [,m,d] = dateStr.split('-').map(Number);
+  const signs = [
+    [1,20,'גדי','♑'],[2,19,'דלי','♒'],[3,20,'דגים','♓'],[4,20,'טלה','♈'],
+    [5,21,'שור','♉'],[6,21,'תאומים','♊'],[7,23,'סרטן','♋'],[8,23,'אריה','♌'],
+    [9,23,'בתולה','♍'],[10,23,'מאזניים','♎'],[11,22,'עקרב','♏'],[12,22,'קשת','♐'],[12,31,'גדי','♑']
+  ];
+  for (const [em, ed, name, sym] of signs) {
+    if (m < em || (m === em && d <= ed)) return { name, sym };
+  }
+  return { name: 'גדי', sym: '♑' };
+}
+
+// ══════════════════════════════════
+// RENDER
+// ══════════════════════════════════
 function render() {
-  const card = document.getElementById('main-card');
+  const card = document.getElementById('card');
   card.innerHTML = '';
 
-  if (state.step < steps.length) {
-    renderStep(card, steps[state.step]);
-  } else if (state.step === steps.length) {
-    renderLoading(card);
-    generateProfile();
-  } else {
-    renderResult(card);
-  }
+  if (state.step < steps.length) renderStep(card);
+  else if (state.step === steps.length) { renderLoading(card); generateProfile(); }
+  else renderResult(card);
 }
 
-function renderProgress(container) {
+function renderStep(card) {
+  const step = steps[state.step];
   const pct = Math.round((state.step / steps.length) * 100);
-  const wrap = document.createElement('div');
-  wrap.className = 'progress-wrap';
-  wrap.innerHTML = `
-    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    <div class="progress-text">${state.step}/${steps.length}</div>
-  `;
-  container.appendChild(wrap);
-}
 
-function renderStep(card, step) {
-  renderProgress(card);
+  // Progress
+  const pw = el('div', 'prog-wrap');
+  pw.innerHTML = `<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-num">${state.step}/${steps.length}</div>`;
+  card.appendChild(pw);
 
-  const icon = document.createElement('div');
-  icon.className = 'step-icon';
-  icon.textContent = step.icon;
-  card.appendChild(icon);
+  // Icon + title
+  card.appendChild(elText('div', 'step-icon', step.icon));
+  card.appendChild(elText('div', 'step-title', step.title));
+  card.appendChild(elText('div', 'step-sub', step.sub));
 
-  const title = document.createElement('div');
-  title.className = 'question-title';
-  title.textContent = step.title;
-  card.appendChild(title);
+  if (step.type === 'multi') renderMulti(card, step);
+  else if (step.type === 'scale') renderScale(card, step);
+  else renderFields(card, step);
 
-  const sub = document.createElement('div');
-  sub.className = 'question-subtitle';
-  sub.textContent = step.subtitle;
-  card.appendChild(sub);
-
-  if (step.type === 'choices') {
-    const grid = document.createElement('div');
-    grid.className = 'choices two-col';
-    let selected = state.answers[step.key] || null;
-
-    step.choices.forEach(c => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn' + (selected === c.text ? ' selected' : '');
-      btn.innerHTML = `<span class="emoji">${c.emoji}</span>${c.text}`;
-      btn.onclick = () => {
-        selected = c.text;
-        state.answers[step.key] = c.text;
-        grid.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-      };
-      grid.appendChild(btn);
-    });
-    card.appendChild(grid);
-  } else {
-    step.fields.forEach(f => {
-      const group = document.createElement('div');
-      group.className = 'input-group';
-      const label = document.createElement('label');
-      label.className = 'input-label';
-      label.textContent = f.label;
-      group.appendChild(label);
-
-      let el;
-      if (f.type === 'textarea') {
-        el = document.createElement('textarea');
-        el.placeholder = f.placeholder || '';
-      } else {
-        el = document.createElement('input');
-        el.type = f.type;
-        if (f.placeholder) el.placeholder = f.placeholder;
-      }
-      el.value = state.answers[f.key] || '';
-      el.addEventListener('input', () => { state.answers[f.key] = el.value; });
-      group.appendChild(el);
-      card.appendChild(group);
-    });
-  }
-
-  const btn = document.createElement('button');
-  btn.className = 'btn';
-  btn.textContent = state.step === steps.length - 1 ? '✨ גלה את הייעוד שלי' : 'המשך ←';
-  btn.onclick = () => {
-    state.step++;
-    render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const btn = el('button', 'btn');
+  btn.textContent = state.step === steps.length - 1 ? '✨ גלה את מפת הגורל שלי' : 'המשך ←';
+  btn.onclick = () => { state.step++; render(); scrollTo({ top: 0, behavior: 'smooth' }); };
   card.appendChild(btn);
 }
 
+function renderMulti(card, step) {
+  const sel = state.answers[step.key] || [];
+  if (step.max) card.appendChild(elText('div', 'multi-hint', `✦ בחר עד ${step.max} אפשרויות`));
+  else card.appendChild(elText('div', 'multi-hint', '✦ ניתן לבחור מספר תשובות'));
+
+  const grid = el('div', `choices-grid cols${step.cols || 2}`);
+  step.choices.forEach(c => {
+    const btn = el('button', 'choice' + (sel.includes(c.t) ? ' selected' : ''));
+    btn.innerHTML = `<span class="c-check">${sel.includes(c.t) ? '✓' : ''}</span><span class="c-emoji">${c.e}</span>${c.t}`;
+    btn.onclick = () => {
+      const cur = state.answers[step.key] || [];
+      if (cur.includes(c.t)) {
+        state.answers[step.key] = cur.filter(x => x !== c.t);
+      } else {
+        if (step.max && cur.length >= step.max) return;
+        state.answers[step.key] = [...cur, c.t];
+      }
+      render();
+    };
+    grid.appendChild(btn);
+  });
+  card.appendChild(grid);
+}
+
+function renderScale(card, step) {
+  const cur = state.answers[step.key];
+  const wrap = el('div', 'scale-wrap');
+  const labels = el('div', 'scale-labels');
+  labels.innerHTML = `<span>${step.min}</span><span>${step.max}</span>`;
+  wrap.appendChild(labels);
+  const btns = el('div', 'scale-btns');
+  for (let i = 1; i <= 10; i++) {
+    const b = el('button', 'scale-btn' + (cur == i ? ' selected' : ''));
+    b.textContent = i;
+    b.onclick = () => { state.answers[step.key] = i; renderStep(document.getElementById('card')); };
+    btns.appendChild(b);
+  }
+  wrap.appendChild(btns);
+  card.appendChild(wrap);
+}
+
+function renderFields(card, step) {
+  step.fields.forEach(f => {
+    const group = el('div', 'field');
+    const label = el('label', 'field-label');
+    label.textContent = f.label;
+    group.appendChild(label);
+
+    let input;
+    if (f.type === 'textarea') {
+      input = el('textarea');
+      input.placeholder = f.ph || '';
+      input.rows = 4;
+    } else {
+      input = el('input');
+      input.type = f.type;
+      if (f.ph) input.placeholder = f.ph;
+    }
+    input.value = state.answers[f.key] || '';
+    input.addEventListener('input', () => { state.answers[f.key] = input.value; });
+    group.appendChild(input);
+    card.appendChild(group);
+  });
+}
+
 function renderLoading(card) {
-  const quotes = [
-    '"כל אחד בא לעולם עם שליחות" — הקבלה',
-    '"הכוכבים נוטים, לא כופים" — ח\'ובן',
-    '"מה שנמצא בפנים, יתגלה בחוץ" — חכמת הנומרולוגיה'
+  const loadSteps = [
+    'מחשב מספרי גורל ונשמה...',
+    'מנתח את מפת הכוכבים שלך...',
+    'מזהה דפוסים ואנרגיות...',
+    'בונה את תוכנית הפעולה שלך...',
+    'מכין תובנות אישיות עמוקות...'
   ];
+
   card.innerHTML = `
     <div class="loading">
-      <div class="orbit">
-        <div class="orbit-ring orbit-ring-1"></div>
-        <div class="orbit-ring orbit-ring-2"></div>
-        <div class="orbit-core"></div>
+      <div class="mandala">
+        <div class="m-ring m-ring-1"></div>
+        <div class="m-ring m-ring-2"></div>
+        <div class="m-ring m-ring-3"></div>
+        <div class="m-core"></div>
       </div>
-      <div class="loading-text">מנתח את מפת הגורל שלך...</div>
-      <div class="loading-quote">${quotes[Math.floor(Math.random()*quotes.length)]}</div>
+      <div class="load-title">מנתח את מפת הגורל שלך</div>
+      <div class="load-sub">${state.answers.name || ''} • ${getZodiac(state.answers.birthdate)?.sym || '✦'} • ${calcLifePath(state.answers.birthdate) || '?'}</div>
+      <div class="load-quote">"כל אחד בא לעולם עם שליחות ייחודית — המפגש עם עצמך הוא תחילת הדרך"</div>
+      <div class="load-steps">
+        ${loadSteps.map((s, i) => `<div class="load-step" style="animation-delay:${i*0.6}s"><div class="dot"></div>${s}</div>`).join('')}
+      </div>
     </div>
   `;
 }
 
 function renderResult(card) {
-  card.innerHTML = '';
-  renderProgress(card);
-
   const p = state.profile;
+  card.innerHTML = '';
 
-  // Header
-  const header = document.createElement('div');
-  header.className = 'result-header';
-  header.innerHTML = `
-    <div style="font-size:56px;margin-bottom:12px">🌟</div>
+  const pct = 100;
+  const pw = el('div', 'prog-wrap');
+  pw.innerHTML = `<div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-num">✓</div>`;
+  card.appendChild(pw);
+
+  // Hero
+  const hero = el('div', 'result-hero');
+  const zodiac = getZodiac(state.answers.birthdate);
+  const lifePath = calcLifePath(state.answers.birthdate);
+  hero.innerHTML = `
+    <div class="result-star">🌟</div>
     <div class="result-name">${state.answers.name} — מפת הגורל שלך</div>
-    <div style="color:var(--text-dim);font-size:13px">ניתוח אישי מלא</div>
+    <div class="result-tagline">${zodiac?.sym || ''} ${zodiac?.name || ''} • מספר גורל ${lifePath || '?'} • ניתוח אישי מלא</div>
   `;
-  card.appendChild(header);
+  card.appendChild(hero);
 
-  // Render sections from profile
-  if (p) {
+  if (p?.affirmation) {
+    const aff = el('div', 'affirmation');
+    aff.innerHTML = `<div class="aff-label">✦ האישור היומי שלך ✦</div><div class="aff-text">"${p.affirmation}"</div>`;
+    card.appendChild(aff);
+  }
+
+  if (p?.sections) {
     p.sections.forEach(sec => {
-      const s = document.createElement('div');
-      s.className = 'section';
+      const s = el('div', 'section');
       s.innerHTML = `
-        <div class="section-title">${sec.icon} ${sec.title}</div>
-        <div class="section-content">${sec.content}</div>
+        <div class="sec-header">
+          <span class="sec-icon">${sec.icon}</span>
+          <span class="sec-title">${sec.title}</span>
+          <span class="sec-toggle">▼</span>
+        </div>
+        <div class="sec-body">${sec.content}</div>
       `;
+      const toggle = s.querySelector('.sec-toggle');
+      const body = s.querySelector('.sec-body');
+      s.querySelector('.sec-header').onclick = () => {
+        toggle.classList.toggle('open');
+        body.style.display = body.style.display === 'none' ? '' : 'none';
+      };
       card.appendChild(s);
     });
+  }
 
-    // Action steps
-    if (p.steps && p.steps.length) {
-      const stepsEl = document.createElement('div');
-      stepsEl.className = 'section';
-      stepsEl.innerHTML = `<div class="section-title">🗺️ המסלול שלך — צעדים ראשונים</div>`;
-      const ul = document.createElement('ul');
-      ul.className = 'steps-list';
-      p.steps.forEach(st => {
-        const li = document.createElement('li');
-        li.textContent = st;
-        ul.appendChild(li);
-      });
-      stepsEl.appendChild(ul);
-      card.appendChild(stepsEl);
-    }
+  if (p?.steps) {
+    const stepsEl = el('div', 'section');
+    const ol = el('ol', 'steps-ol');
+    p.steps.forEach(st => {
+      const li = el('li'); li.textContent = st; ol.appendChild(li);
+    });
+    stepsEl.innerHTML = `<div class="sec-header"><span class="sec-icon">🗺️</span><span class="sec-title">מסלול הפעולה שלך</span></div>`;
+    stepsEl.appendChild(ol);
+    card.appendChild(stepsEl);
   }
 
   // Chat
-  const chatWrap = document.createElement('div');
-  chatWrap.className = 'chat-wrap section';
-  chatWrap.innerHTML = `
-    <div class="section-title">💬 שאל את המדריך שלך</div>
-    <div class="chat-messages" id="chat-msgs"></div>
-    <div class="chat-input-row">
+  const chatSec = el('div', 'chat-section');
+  const quickQs = ['מה הייעוד שלי?', 'מה כוחות הנסתרים שלי?', 'איך אתגבר על הפחדים?', 'מה הצעד הראשון שלי?'];
+  chatSec.innerHTML = `
+    <div class="chat-header">💬 שוחח עם המדריך האישי שלך</div>
+    <div class="quick-qs">${quickQs.map(q => `<button class="quick-q" onclick="sendQuick('${q}')">${q}</button>`).join('')}</div>
+    <div class="chat-msgs" id="chat-msgs"></div>
+    <div class="chat-row">
       <input type="text" id="chat-input" placeholder="שאל שאלה על הייעוד שלך..." />
       <button class="send-btn" id="send-btn">→</button>
     </div>
   `;
-  card.appendChild(chatWrap);
+  card.appendChild(chatSec);
 
-  // Init chat
   setTimeout(() => {
-    addMsg('ai', `שלום ${state.answers.name}! עיינתי במפת הגורל שלך. יש לך שאלות? אני כאן לעזור. 🌟`);
+    addMsg('ai', `שלום ${state.answers.name}! 🌟 עיינתי לעומק במפת הגורל שלך. יש לי תובנות מיוחדות עבורך. מה תרצה לדעת?`);
     document.getElementById('send-btn').onclick = sendChat;
-    document.getElementById('chat-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') sendChat();
-    });
+    document.getElementById('chat-input').addEventListener('keydown', e => { if(e.key==='Enter') sendChat(); });
   }, 100);
 }
 
+// ══════════════════════════════════
+// GENERATE PROFILE
+// ══════════════════════════════════
+async function generateProfile() {
+  const a = state.answers;
+  const lifePath = calcLifePath(a.birthdate);
+  const zodiac = getZodiac(a.birthdate);
+  const soulNum = calcSoulNumber(a.name);
+
+  const prompt = `אתה מומחה עולמי בנומרולוגיה, אסטרולוגיה וקואצ'ינג טרנספורמטיבי. אתה לומד ומשתפר מכל שיחה.
+
+פרטי המשתמש:
+- שם: ${a.name}
+- תאריך לידה: ${a.birthdate} | שעה: ${a.birthtime || 'לא ידוע'} | מקום: ${a.birthplace || 'לא ידוע'}
+- מזל: ${zodiac?.name} ${zodiac?.sym}
+- מספר גורל (חושב): ${lifePath}
+- מספר נשמה: ${soulNum}
+- תחושות נוכחיות: ${(a.feelings||[]).join(', ')}
+- כוחות: ${(a.strengths||[]).join(', ')}
+- חסמים: ${(a.obstacles||[]).join(', ')}
+- ערכים: ${(a.values||[]).join(', ')}
+- תשוקה: ${a.passion || 'לא צוין'}
+- חלום: ${a.dream || 'לא צוין'}
+- דחיפות לשינוי: ${a.urgency}/10
+
+הנחיות:
+1. חשב את מספר הגורל ומספר הנשמה בפירוט ותן פרשנות עמוקה
+2. נתח את המזל האסטרולוגי בהתאם לתאריך הלידה האמיתי
+3. שלב את הנומרולוגיה עם האסטרולוגיה ליצירת תמונה מלאה
+4. התייחס לכוחות, לחסמים ולערכים שנבחרו
+5. תן ניתוח עמוק, אישי ומדויק — לא גנרי
+
+ענה ONLY ב-JSON תקני בלי Markdown:
+{
+  "affirmation": "אישור יומי עוצמתי ואישי",
+  "sections": [
+    {"icon":"🔢","title":"נומרולוגיה — מספרי הגורל והנשמה","content":"<p><strong>מספר גורל ${lifePath}</strong>: ...</p><p>...</p>"},
+    {"icon":"⭐","title":"אסטרולוגיה — ${zodiac?.name} ${zodiac?.sym}","content":"<p>...</p>"},
+    {"icon":"💎","title":"הכוחות הנסתרים שלך","content":"<p>...</p>"},
+    {"icon":"🎯","title":"הייעוד האמיתי שלך","content":"<p>...</p>"},
+    {"icon":"🌑","title":"הצל שלך — פריצת הדרך","content":"<p>...</p>"},
+    {"icon":"💰","title":"הפוטנציאל הכלכלי שלך","content":"<p>...</p>"}
+  ],
+  "steps": ["צעד 1...","צעד 2...","צעד 3...","צעד 4...","צעד 5...","צעד 6..."]
+}`;
+
+  try {
+    const raw = await callGemini(prompt);
+    const clean = raw.replace(/```json|```/g, '').trim();
+    state.profile = JSON.parse(clean);
+  } catch(e) {
+    state.profile = {
+      affirmation: "אני מוכן לגלות את ייעודי האמיתי ולצעוד לקראתו בעוז",
+      sections: [{ icon: '✨', title: 'ניתוח אישי', content: '<p>הניתוח זמין בקרוב. נסה שוב.</p>' }],
+      steps: ['פנה אל עצמך בשאלות עמוקות', 'זהה דפוסים חוזרים בחייך', 'התחל בצעד קטן אחד היום']
+    };
+  }
+
+  state.step = steps.length + 1;
+  render();
+}
+
+// ══════════════════════════════════
+// CHAT
+// ══════════════════════════════════
 function addMsg(role, text) {
   const msgs = document.getElementById('chat-msgs');
   if (!msgs) return;
-  const div = document.createElement('div');
-  div.className = `msg msg-${role}`;
-  div.textContent = text;
-  msgs.appendChild(div);
+  const d = el('div', `msg msg-${role}`);
+  d.textContent = text;
+  msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
-  if (role === 'user') state.chatHistory.push({ role: 'user', content: text });
-  else state.chatHistory.push({ role: 'assistant', content: text });
+  state.chatHistory.push({ role: role === 'ai' ? 'model' : 'user', text });
 }
+
+window.sendQuick = function(q) {
+  document.getElementById('chat-input').value = q;
+  sendChat();
+};
 
 async function sendChat() {
   const input = document.getElementById('chat-input');
@@ -792,108 +1082,53 @@ async function sendChat() {
   input.value = '';
   addMsg('user', text);
 
-  const thinkDiv = document.createElement('div');
-  thinkDiv.className = 'msg msg-ai';
-  thinkDiv.textContent = '...';
-  document.getElementById('chat-msgs').appendChild(thinkDiv);
+  const thinking = el('div', 'msg msg-ai');
+  thinking.textContent = '...';
+  document.getElementById('chat-msgs').appendChild(thinking);
 
-  try {
-    const systemPrompt = `אתה מדריך אישי מומחה בנומרולוגיה, אסטרולוגיה וקואצ'ינג טרנספורמטיבי.
-פרופיל המשתמש:
-- שם: ${state.answers.name}
-- תאריך לידה: ${state.answers.birthdate}
-- מקום לידה: ${state.answers.birthplace}
-- תחושה נוכחית: ${state.answers.feeling}
-- תשוקה: ${state.answers.passion}
-- כוחות: ${state.answers.strength}
-- חסם עיקרי: ${state.answers.obstacle}
-- חלום: ${state.answers.dream}
-ענה בעברית בצורה חמה, עמוקה ומדויקת. התייחס לנומרולוגיה ואסטרולוגיה כשרלוונטי. תן תשובות ממוקדות ומועילות.`;
+  // עדכון תובנות — AI לומד מהשיחה
+  state.sessionInsights.push(text);
 
-    const msgs = [...state.chatHistory.slice(0, -1)];
-    msgs.push({ role: 'user', content: text });
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: msgs
-      })
-    });
-    const data = await res.json();
-    const reply = data.content?.map(c => c.text || '').join('') || 'מצטער, לא הצלחתי לענות.';
-    thinkDiv.textContent = reply;
-    state.chatHistory.push({ role: 'assistant', content: reply });
-    document.getElementById('chat-msgs').scrollTop = document.getElementById('chat-msgs').scrollHeight;
-  } catch (e) {
-    thinkDiv.textContent = 'שגיאה בחיבור. נסה שוב.';
-  }
-}
-
-// ---- Generate Profile ----
-async function generateProfile() {
   const a = state.answers;
-  const systemPrompt = `אתה מדריך רוחני-מקצועי ומומחה בנומרולוגיה, אסטרולוגיה וקואצ'ינג טרנספורמטיבי.
-חשב את מספר הגורל ומספר הנשמה על פי הנומרולוגיה, הגדר את המזל ועיין בו לפי תאריך הלידה.
-ענה רק ב-JSON תקני ללא Markdown, ללא backticks. פורמט:
-{
-  "sections": [
-    {"icon":"🔢","title":"נומרולוגיה — מספרי הגורל שלך","content":"<p>...</p>"},
-    {"icon":"⭐","title":"אסטרולוגיה — מפת הכוכבים שלך","content":"<p>...</p>"},
-    {"icon":"💎","title":"הכוחות הנסתרים שלך","content":"<p>...</p>"},
-    {"icon":"🎯","title":"הייעוד שלך","content":"<p>...</p>"},
-    {"icon":"🌑","title":"הצל שלך — מה עוצר אותך","content":"<p>...</p>"}
-  ],
-  "steps": ["צעד ראשון...", "צעד שני...", "צעד שלישי...", "צעד רביעי...","צעד חמישי..."]
-}`;
+  const lifePath = calcLifePath(a.birthdate);
+  const zodiac = getZodiac(a.birthdate);
 
-  const userMsg = `
-שם: ${a.name}
-תאריך לידה: ${a.birthdate}
-שעת לידה: ${a.birthtime || 'לא ידוע'}
-מקום לידה: ${a.birthplace || 'לא ידוע'}
-תחושה: ${a.feeling}
-תשוקה: ${a.passion}
-כוחות: ${a.strength}
-חסם: ${a.obstacle}
-חלום: ${a.dream}
+  const context = `אתה מדריך רוחני ומקצועי, מומחה בנומרולוגיה, אסטרולוגיה וקואצ'ינג.
+אתה לומד ומשתפר מכל שיחה — שים לב לדפוסים בשאלות ותתעמק בהתאם.
 
-נתח לעומק עם חישובי נומרולוגיה ואסטרולוגיה אמיתיים. השתמש ב-<p> tags. כלול את מספר הגורל, מספר הנשמה, מזל, נרטיב עמוק ואישי.`;
+פרופיל: ${a.name} | ${zodiac?.name} | מספר גורל ${lifePath} | כוחות: ${(a.strengths||[]).join(', ')} | חסמים: ${(a.obstacles||[]).join(', ')}
+שאלות קודמות בשיחה: ${state.sessionInsights.slice(-5).join(' | ')}
+
+ענה בעברית, בצורה חמה, עמוקה ומדויקת. התייחס לנומרולוגיה ואסטרולוגיה כשרלוונטי.
+השתמש בידע על המשתמש לתת תשובה ממוקדת ואישית.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userMsg }]
-      })
-    });
-    const data = await res.json();
-    const raw = data.content?.map(c => c.text || '').join('') || '{}';
-    const clean = raw.replace(/```json|```/g, '').trim();
-    state.profile = JSON.parse(clean);
-  } catch (e) {
-    state.profile = {
-      sections: [{
-        icon: '✨',
-        title: 'ניתוח אישי',
-        content: '<p>לא הצלחתי לטעון את הניתוח. נסה שוב.</p>'
-      }],
-      steps: []
-    };
+    const reply = await callGemini(`השאלה: ${text}`, context);
+    thinking.textContent = reply;
+    state.chatHistory.push({ role: 'model', text: reply });
+  } catch(e) {
+    thinking.textContent = 'מצטער, אירעה שגיאה. ודא שמפתח ה-API תקין.';
   }
-
-  state.step = steps.length + 1;
-  render();
+  document.getElementById('chat-msgs').scrollTop = document.getElementById('chat-msgs').scrollHeight;
 }
 
-// ---- Init ----
+// ══════════════════════════════════
+// UTILS
+// ══════════════════════════════════
+function el(tag, cls = '') {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  return e;
+}
+function elText(tag, cls, text) {
+  const e = el(tag, cls);
+  e.textContent = text;
+  return e;
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
 render();
 </script>
 </body>
